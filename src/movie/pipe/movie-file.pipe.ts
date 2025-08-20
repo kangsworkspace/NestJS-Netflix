@@ -14,6 +14,8 @@ export class MovieFilePipe implements PipeTransform<Express.Multer.File, Promise
     ){}
 
     async transform(value: Express.Multer.File, metadata: ArgumentMetadata): Promise<Express.Multer.File> {
+        console.log('📌 MovieFilePipe transform value:', value);
+        
         if(!value){
             throw new BadRequestException('Movie 필드는 필수입니다!');
         }

@@ -24,6 +24,8 @@ import { DefaultLogger } from "./logger/default.logger";
 
                 // 파일 이름 변경하기
                 filename: (req, file, callback) => {
+                    console.log('📌 Multer storage filename callback:', file.originalname);
+
                     const split = file.originalname.split('.');
 
                     let extension = 'mp4';

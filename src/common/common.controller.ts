@@ -19,6 +19,7 @@ export class CommonController {
 
         // callback(error, 파일을 받을 지 여부)
         fileFilter(req, file, callback) {
+            console.log('📌 Multer fileFilter:', file.mimetype);
 
             /// video/mp4 파일 형식 필터
             if (file.mimetype !== 'video/mp4') {
@@ -30,7 +31,12 @@ export class CommonController {
     }))
     createVideo(
         @UploadedFile() video: Express.Multer.File,
-    ){
+    ) {
+        console.log('📌 req.file:', video);
+        if (!video) {
+            throw new BadRequestException('파일이 업로드되지 않았습니다.');
+        }
+
         return {
             fileName: video.filename,
         }
