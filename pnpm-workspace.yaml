@@ -1,0 +1,4 @@
+ignoredBuiltDependencies:
+  - '@automock/adapters.nestjs'
+  - bcrypt
+  - better-sqlite3
