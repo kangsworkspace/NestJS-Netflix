@@ -34,8 +34,8 @@ export class ResponseTimeInterceptor implements NestInterceptor {
                     const diff = resqTime - reqTime;
 
 
-                    // 1초이상 걸리면 에러를 던짐
-                    if (diff > 1000) {
+                    // 3초이상 걸리면 에러를 던짐
+                    if (diff > 3000) {
                         console.log(`!!!!TIMEOUT [${req.method} ${req.path} ${diff}ms]`)
                         throw new InternalServerErrorException('시간이 너무 오래 걸렸습니다!');
                     } else {
