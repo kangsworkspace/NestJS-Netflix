@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     # Git 가상 머신에 PostgreSql 실행
-    secvices:
+    services:
       PostgreSql:
         image: PostgreSql:16
         env:
