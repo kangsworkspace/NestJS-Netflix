@@ -13,8 +13,8 @@ jobs:
 
     # Git 가상 머신에 PostgreSql 실행
     services:
-      PostgreSql:
-        image: PostgreSql:16
+      postgres:
+        image: postgres:16
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
