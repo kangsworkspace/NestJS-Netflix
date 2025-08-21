@@ -103,8 +103,8 @@ jobs:
 
       - name: CreateFolders
         run: |
-          mkdir - p ./public/movie
-          mkdir - p ./public/temp
+          mkdir -p ./public/movie
+          mkdir -p ./public/temp
 
       - name: Install Dependencies
         run: npm i
