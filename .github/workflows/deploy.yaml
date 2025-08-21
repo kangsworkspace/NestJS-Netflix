@@ -19,14 +19,14 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         # DB가 준비되어야 다음 작업을 하도록 설정
+        # postgres 준비 확인
+        # 10 초 간격으로 핑 날리기
+        # 5 초 기다리기
+        # 5 번까지
         options: >-
-          # postgres 준비 확인
           --health-cmd pg_isready
-          # 10 초 간격으로 핑 날리기
           --health-interval 10s
-          # 5 초 기다리기
           --health-timeout 5s
-          # 5 번까지
           --health-retries 5
         ports:
           - 5432:5432
