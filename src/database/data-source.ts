@@ -17,4 +17,9 @@ export default new DataSource({
     migrations: [
         'dist/database/migrations/*.js'
     ],
+    ...(process.env.ENV === 'prod'&& { 
+        ssl: {
+            rejectUnauthorized: false
+        }
+    }),
 });
