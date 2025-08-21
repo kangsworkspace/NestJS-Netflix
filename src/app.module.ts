@@ -89,8 +89,8 @@ import * as winston from 'winston';
 
         // 서버 실행 시 TypeORM이 DB 스키마를 자동으로 생성/수정
         // 운영 환경: synchronize: false + migration을 사용해서 버전 관리
-        synchronize: true,
-        ssl: { rejectUnauthorized: false },
+        synchronize: configService.get<string>(envVariableKeys.env) === 'prod' ? false : true,
+        ...(configService.get<string>(envVariableKeys.env)) === 'prod' && {ssl: { rejectUnauthorized: false }},
       }),
 
       // 위의 useFactory에서 사용할 서비스를 주입

@@ -73,7 +73,7 @@ async function bootstrap() {
   }));
 
   // 서버를 지정된 포트에서 실행
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT || 3000);
 }
 // NestJS 애플리케이션 실행 함수 선언(서버 구동))
 bootstrap();
