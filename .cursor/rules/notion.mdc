@@ -1,0 +1,93 @@
+---
+alwaysApply: false
+---
+
+# Cursor Rules for Notion MCP Operations
+
+## 노션 MCP 작업 시 단계별 접근 방법
+
+### 1단계: 페이지 찾기 및 분석
+- `mcp_Notion_notion-search`로 관련 페이지 검색
+- `mcp_Notion_notion-fetch`로 페이지 상세 내용 확인
+- 페이지 구조와 현재 상태 파악
+- **중요**: 정확한 page_id 확인 (UUID 형식)
+
+### 2단계: 수정할 부분 정확히 파악
+- 기존 내용의 정확한 텍스트 패턴 확인
+- `selection_with_ellipsis`에 사용할 정확한 문자열 식별
+- 공백, 줄바꿈, 특수문자까지 정확히 매칭
+- **중요**: fetch 결과에서 실제 텍스트를 복사해서 사용
+
+### 3단계: 수정 실행
+- `mcp_Notion_notion-update-page` 사용 시 올바른 파라미터 형식 준수
+- **중요**: `data` 파라미터는 반드시 JSON 객체로 전달
+- `page_id`는 정확한 UUID 형식 사용 (하이픈 포함)
+- `selection_with_ellipsis`는 실제 페이지 내용과 정확히 일치
+
+### 4단계: 결과 검증
+- 수정 후 페이지 내용 다시 확인
+- 오류 발생 시 이전 단계로 돌아가서 재시도
+- 성공 여부를 사용자에게 명확히 보고
+
+## 일반적인 실패 원인과 해결책
+
+### 1. 파라미터 형식 오류
+**문제**: `data` 파라미터를 문자열로 전달
+```javascript
+// ❌ 잘못된 방법
+"data": "{'page_id': '...', 'command': '...'}"
+
+// ✅ 올바른 방법  
+"data": {"page_id": "...", "command": "..."}
+```
+
+### 2. page_id 형식 오류
+**문제**: 잘못된 UUID 형식 사용
+```javascript
+// ❌ 잘못된 방법
+"page_id": "734549a-8017-ff6917283b"
+
+// ✅ 올바른 방법
+"page_id": "27d87345-f49a-8017-b1c2-ff6917283d2b"
+```
+
+### 3. 텍스트 매칭 실패
+**문제**: `selection_with_ellipsis`가 실제 페이지 내용과 불일치
+**해결책**: 
+- fetch 결과에서 정확한 텍스트 복사
+- 공백, 줄바꿈, 특수문자 정확히 포함
+- 유니크한 패턴 사용
+
+### 4. API 응답 오류 해결
+**"String not found" 오류**: 
+- 페이지 내용이 이미 변경됨
+- `mcp_Notion_notion-fetch`로 최신 내용 다시 확인
+- 새로운 패턴으로 재시도
+
+## 올바른 사용 예시
+
+```javascript
+// 올바른 mcp_Notion_notion-update-page 호출
+{
+  "data": {
+    "page_id": "27d87345-f49a-8017-b1c2-ff6917283d2b",
+    "command": "replace_content_range", 
+    "selection_with_ellipsis": "▶### 실행 흐름 (NestJS - Netflix 프로젝트 참고)\n\n\n\n---",
+    "new_str": "▶### 실행 흐름 (NestJS - Netflix 프로젝트 참고, Redis 사용)\n..."
+  }
+}
+```
+
+## 주의사항
+- MCP 도구 파라미터는 항상 JSON 객체 형식으로 전달
+- 문자열 매칭 시 정확성 최우선
+- 오류 발생 시 단계별로 문제 해결
+- 각 단계마다 결과 확인 후 다음 단계 진행
+- 페이지 내용이 변경되었을 수 있으니 항상 최신 상태 확인
+
+## 성공적인 워크플로우
+1. **검색**: `mcp_Notion_notion-search`로 페이지 찾기
+2. **분석**: `mcp_Notion_notion-fetch`로 현재 상태 확인
+3. **매칭**: 정확한 텍스트 패턴 식별
+4. **수정**: 올바른 JSON 형식으로 업데이트
+5. **검증**: 결과 확인 및 보고

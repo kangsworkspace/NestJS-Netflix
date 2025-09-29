@@ -9,6 +9,9 @@ import { TasksService } from "./tasks.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Movie } from "src/movie/entity/movie.entity";
 import { DefaultLogger } from "./logger/default.logger";
+import { BullModule } from "@nestjs/bullmq";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { envVariableKeys } from "./const/env.const";
 
 @Module({
     // 외부 기능이나 다른 모듈이 필요할 때 imports
@@ -36,11 +39,27 @@ import { DefaultLogger } from "./logger/default.logger";
                 }
             }),
         }),
-
-        //
         TypeOrmModule.forFeature([
             Movie,
-        ])
+        ]),
+        // BullMQ Redis 큐 시스템 설정
+        // Redis를 사용한 백그라운드 작업 큐 관리
+        BullModule.forRootAsync({
+            imports: [ConfigModule],
+            useFactory: (configService: ConfigService) => ({
+                connection: {
+                    host: configService.get<string>(envVariableKeys.redisHost) || 'localhost',
+                    port: configService.get<number>(envVariableKeys.redisPort) || 6379,
+                    username: 'default',
+                    password: configService.get<string>(envVariableKeys.redisPassword) || undefined,
+                }
+            }),
+            inject: [ConfigService],
+        }),
+        // 큐 등록
+        BullModule.registerQueue({
+            name: 'thumbnail-generation',
+        }),
     ],
     // 요청(Request)을 받고 응답(Response)을 처리하는 클래스
     controllers: [CommonController],

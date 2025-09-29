@@ -1,17 +1,17 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { MovieModule } from './movie/movie.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConditionalModule, ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { Movie } from './movie/entity/movie.entity';
 import { MovieDetail } from './movie/entity/movie-detail.entity';
 import { DirectorModule } from './director/director.module';
 import { Director } from './director/entity/director.entity';
 import { GenreModule } from './genre/genre.module';
-import { Genre } from './genre/entities/genre.entity';
+import { Genre } from './genre/entity/genre.entity';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { User } from './user/entities/user.entity';
+import { User } from './user/entity/user.entity';
 import { envVariableKeys } from './common/const/env.const';
 import { BearerTokenMiddleware } from './auth/middleware/bearer-token.middleware';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
@@ -27,7 +27,11 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { ThrottleInterceptor } from './common/interceptor/throttle.interceper';
 import { ScheduleModule } from '@nestjs/schedule';
 import { WinstonModule } from 'nest-winston';
+import { ChatModule } from './chat/chat.module';
 import * as winston from 'winston';
+import { Chat } from './chat/entity/chat.entity';
+import { ChatRoom } from './chat/entity/chat-room.entity';
+import { WorkerModule } from './worker/worker.module';
 
 
 // NestJS에서 애플리케이션의 루트 모듈을 정의할 때 사용
@@ -85,6 +89,8 @@ import * as winston from 'winston';
           Director,
           Genre,
           User,
+          Chat,
+          ChatRoom,
         ],
 
         // 서버 실행 시 TypeORM이 DB 스키마를 자동으로 생성/수정
@@ -159,6 +165,11 @@ import * as winston from 'winston';
     GenreModule,
     AuthModule,
     UserModule,
+    ChatModule,
+    ConditionalModule.registerWhen(
+      WorkerModule,
+      (env: NodeJS.ProcessEnv) => env['TYPE'] === 'worker'
+    )
   ],
 
   // 서비스, 유틸, 인터셉터, 가드 등 실행 로직을 담은 클래스

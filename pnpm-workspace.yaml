@@ -1,4 +1,6 @@
 ignoredBuiltDependencies:
   - '@automock/adapters.nestjs'
+  - '@ffmpeg-installer/darwin-arm64'
   - bcrypt
   - better-sqlite3
+  - msgpackr-extract

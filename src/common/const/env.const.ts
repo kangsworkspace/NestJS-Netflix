@@ -9,6 +9,9 @@ const dbTestDatabase = 'DB_TEST_DATABASE';
 const hashRounds = 'HASH_ROUNDS';
 const accessTokenSecret = 'ACCESS_TOKEN_SECRET';
 const refreshTokenSecret = 'REFRESH_TOKEN_SECRET';
+const redisHost = 'REDIS_HOST';
+const redisPort = 'REDIS_PORT';
+const redisPassword = 'REDIS_PASSWORD';
 
 export const envVariableKeys = {
     env,
@@ -22,4 +25,7 @@ export const envVariableKeys = {
     hashRounds,
     accessTokenSecret,
     refreshTokenSecret,
+    redisHost,
+    redisPort,
+    redisPassword,
 }

@@ -1,11 +1,11 @@
-import { Controller, Request, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, ClassSerializerInterceptor, ParseIntPipe, BadRequestException, ParseBoolPipe, NotFoundException, UseGuards, UploadedFile, UploadedFiles, Version, VERSION_NEUTRAL } from '@nestjs/common';
+import { Controller, Request, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, ClassSerializerInterceptor, ParseIntPipe, BadRequestException, ParseBoolPipe, NotFoundException, UseGuards, UploadedFile, UploadedFiles, Version, VERSION_NEUTRAL, Req } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MovieTitleValidationPipe } from './pipe/movie-title-validation.pipe';
 import { Public } from 'src/auth/decorator/public.decorator';
 import { RBAC } from 'src/auth/decorator/rbac.decorator';
-import { Role } from 'src/user/entities/user.entity';
+import { Role } from 'src/user/entity/user.entity';
 import { GetMoviesDto } from './dto/get-movies.dto';
 import { CacheInterceptor } from 'src/common/interceptor/cache.interceptor';
 import { TransactionInterceptor } from 'src/common/interceptor/transaction.interceptor';
@@ -93,8 +93,23 @@ export class MovieController {
   @Get(':id')
   @Public()
   getMovie(
-    @Param('id', ParseIntPipe) id: number
+    @Param('id', ParseIntPipe) id: number,
+    @Req() request: any,
   ) {
+    // 세션에서 현재 영화 조회 횟수 정보를 가져옴
+    const session = request.session;
+    const movieCount = session.movieCount ?? {};
+
+    // 해당 영화의 조회 횟수를 1 증가시키고 세션에 저장
+    // 기존에 조회한 적이 있으면 +1, 없으면 1로 초기화
+    request.session.movieCount = {
+      ...movieCount,
+      [id]: movieCount[id] 
+        ? movieCount[id] + 1
+        : 1,
+    }
+
+    console.log(session);
     return this.movieService.findOne(id);
   }
 

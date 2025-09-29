@@ -3,6 +3,16 @@ import { AppModule } from './app.module';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as ffmpeg from '@ffmpeg-installer/ffmpeg';
+import * as ffprobe from 'ffprobe-static';
+import * as ffmpegFluent from 'fluent-ffmpeg';
+import * as session from 'express-session';
+
+// Fmpeg 경로 설정
+ffmpegFluent.setFfmpegPath(ffmpeg.path);
+ffmpegFluent.setFfprobePath(ffprobe.path);
+
+
 
 // NestJS 애플리케이션 실행 함수 구성
 async function bootstrap() {
@@ -71,6 +81,15 @@ async function bootstrap() {
       enableImplicitConversion: true,
     }
   }));
+
+
+  // 세션 설정
+  app.use(
+    session({
+      // 프로덕트 환경에서는 환경변수 + 배포용, 개발용 다르게 처리
+      secret: 'secret',
+    })
+  )
 
   // 서버를 지정된 포트에서 실행
   await app.listen(process.env.PORT || 3000);

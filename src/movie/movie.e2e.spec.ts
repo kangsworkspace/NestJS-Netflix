@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
-import { Role, User } from 'src/user/entities/user.entity';
+import { Role, User } from 'src/user/entity/user.entity';
 import { Director } from 'src/director/entity/director.entity';
 import { Movie } from './entity/movie.entity';
 import { Genre } from 'src/genre/entities/genre.entity';
