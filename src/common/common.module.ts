@@ -12,6 +12,7 @@ import { DefaultLogger } from "./logger/default.logger";
 import { BullModule } from "@nestjs/bullmq";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { envVariableKeys } from "./const/env.const";
+import { PrismaService } from "./prisma.service";
 
 @Module({
     // 외부 기능이나 다른 모듈이 필요할 때 imports
@@ -64,8 +65,8 @@ import { envVariableKeys } from "./const/env.const";
     // 요청(Request)을 받고 응답(Response)을 처리하는 클래스
     controllers: [CommonController],
     // 서비스, 유틸, 인터셉터, 가드 등 실행 로직을 담은 클래스
-    providers: [CommonService, TasksService, DefaultLogger],
+    providers: [CommonService, TasksService, DefaultLogger, PrismaService],
     // 다른 모듈이 이 모듈의 특정 provider를 사용하도록 공개할 때 등록
-    exports: [CommonService, DefaultLogger],
+    exports: [CommonService, DefaultLogger, PrismaService],
 })
 export class CommonModule { }

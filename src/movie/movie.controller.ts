@@ -5,7 +5,6 @@ import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MovieTitleValidationPipe } from './pipe/movie-title-validation.pipe';
 import { Public } from 'src/auth/decorator/public.decorator';
 import { RBAC } from 'src/auth/decorator/rbac.decorator';
-import { Role } from 'src/user/entity/user.entity';
 import { GetMoviesDto } from './dto/get-movies.dto';
 import { CacheInterceptor } from 'src/common/interceptor/cache.interceptor';
 import { TransactionInterceptor } from 'src/common/interceptor/transaction.interceptor';
@@ -17,6 +16,7 @@ import { QueryRunner as QR } from 'typeorm';
 import { CacheKey, CacheTTL, CacheInterceptor as CI } from '@nestjs/cache-manager';
 import { Throttle } from 'src/common/decorator/throttle.decorators';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Role } from '@prisma/client';
 
 /// Version 설정
 // @Controller({
@@ -119,7 +119,7 @@ export class MovieController {
   // admin보다 낮으면 오류 던짐
   @RBAC(Role.admin)
   // 트랜잭션 인터셉터 사용
-  @UseInterceptors(TransactionInterceptor)
+  // @UseInterceptors(TransactionInterceptor) (Prisma에서는 사용 X)
   // 파일 리스트 업로드 인터셉터 사용
   // @UseInterceptors(FilesInterceptor('movies'))
 
@@ -177,8 +177,8 @@ export class MovieController {
     // UserId, QueryRunner처럼 커스텀 데코레이터로 만들면 좋다.
     // @Request() req,
 
-    // queryRunner를 가져오는 커스텀 데코레이터
-    @QueryRunner() queryRunner: QR,
+    // queryRunner를 가져오는 커스텀 데코레이터 (Prisma에서는 사용 X)
+    // @QueryRunner() queryRunner: QR,
     // userId를 가져오는 커스텀 데코레이터
     @UserId() userId: number,
 
@@ -209,7 +209,7 @@ export class MovieController {
       body,
       userId,
       // movie.filename,
-      queryRunner,
+      // queryRunner, (Prisma에서는 사용 X)
     );
   }
 
@@ -308,3 +308,7 @@ export class MovieController {
 //     return [];
 //   }
 // }
+
+
+
+

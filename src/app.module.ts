@@ -56,6 +56,7 @@ import { WorkerModule } from './worker/worker.module';
       // .requred() 해당 필드가 반드시 존재해야 한다.
       validationSchema: Joi.object({
         ENV: Joi.string().valid('dev', 'prod', 'test').required(),
+        DB_URL: Joi.string().required(),
         DB_TYPE: Joi.string().valid('postgres').required(),
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.number().required(),
@@ -74,12 +75,13 @@ import { WorkerModule } from './worker/worker.module';
       // 설정을 위한 팩토리 함수.
       // 이 함수에서 configService를 이용해 DB 설정 값을 가져온다
       useFactory: (configService: ConfigService) => ({
+        url: configService.get<string>(envVariableKeys.dbUrl),
         type: configService.get<string>(envVariableKeys.dbType) as "postgres",
-        host: configService.get<string>(envVariableKeys.dbHost),
-        port: configService.get<number>(envVariableKeys.dbPort),
-        username: configService.get<string>(envVariableKeys.dbUsername),
-        password: configService.get<string>(envVariableKeys.dbPassword),
-        database: configService.get<string>(envVariableKeys.dbDatabase),
+        // host: configService.get<string>(envVariableKeys.dbHost),
+        // port: configService.get<number>(envVariableKeys.dbPort),
+        // username: configService.get<string>(envVariableKeys.dbUsername),
+        // password: configService.get<string>(envVariableKeys.dbPassword),
+        // database: configService.get<string>(envVariableKeys.dbDatabase),
         
         // TypeORM이 관리할 엔티티들
         entities: [
@@ -330,3 +332,6 @@ export class AppModule implements NestModule {
 ///
 /// 10. 📤 응답 반환
 ///    - 클라이언트에게 응답 전송
+
+
+

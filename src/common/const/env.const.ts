@@ -1,4 +1,5 @@
 const env = 'ENV';
+const dbUrl = 'DB_URL';
 const dbType = 'DB_TYPE';
 const dbHost = 'DB_HOST';
 const dbPort = 'DB_PORT';
@@ -15,6 +16,7 @@ const redisPassword = 'REDIS_PASSWORD';
 
 export const envVariableKeys = {
     env,
+    dbUrl,
     dbType,
     dbHost,
     dbPort,

@@ -5,7 +5,7 @@ import { AppModule } from 'src/app.module';
 import { Role, User } from 'src/user/entity/user.entity';
 import { Director } from 'src/director/entity/director.entity';
 import { Movie } from './entity/movie.entity';
-import { Genre } from 'src/genre/entities/genre.entity';
+import { Genre } from 'src/genre/entity/genre.entity';
 import { DataSource } from 'typeorm';
 import { MovieDetail } from './entity/movie-detail.entity';
 import { MovieUserLike } from './entity/movie-user-like-entity';
