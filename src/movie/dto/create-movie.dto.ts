@@ -23,25 +23,24 @@ export class CreateMovieDto{
     detail: string;
 
     @IsNotEmpty()
-    @IsNumber()
+    @IsString()
     // Swagger 문서에 들어갈 내용 설정
     @ApiProperty({
         description: '감독 객체 ID',
         example: 1
     })    
-    directorId: number
+    directorId: string
 
-    @IsArray()
     @ArrayNotEmpty()
-    @IsNumber({ maxDecimalPlaces: 0 }, { each: true })
+    @IsString({ each: true })
     // FormData로 들어오는 값은 모두 string으로 들어오기 때문에 사용
-    @Type(() => Number)
+    @Type(() => String)
         // Swagger 문서에 들어갈 내용 설정
     @ApiProperty({
         description: '장르 객체 배열',
         example: [1, 2]
     })
-    genreIds: number[]
+    genreIds: string[]
 
     @IsString()
     // Swagger 문서에 들어갈 내용 설정

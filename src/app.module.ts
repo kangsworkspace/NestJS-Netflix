@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { MovieModule } from './movie/movie.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 import { ConditionalModule, ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { Movie } from './movie/entity/movie.entity';
@@ -66,7 +67,14 @@ import { WorkerModule } from './worker/worker.module';
         HASH_ROUNDS: Joi.number().required(),
         ACCESS_TOKEN_SECRET: Joi.string().required(),
         REFRESH_TOKEN_SECRET: Joi.string().required(),
+        MONGODB_PASSWORD: Joi.string().required(),
       })
+    }),
+    MongooseModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        uri: `mongodb+srv://spdlqjrkdrjs_db_user:${configService.get<string>(envVariableKeys.mongodbPassword)}@nestjsmongo.xjg7hv7.mongodb.net/?retryWrites=true&w=majority&appName=NestJSMongo`
+      }),
+      inject: [ConfigService],
     }),
     // TypeORM 모듈을 비동기 방식으로 설정
     // ConfigService를 통해 환경변수를 안전하게 가져오고,

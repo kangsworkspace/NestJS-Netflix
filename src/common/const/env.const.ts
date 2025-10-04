@@ -13,6 +13,7 @@ const refreshTokenSecret = 'REFRESH_TOKEN_SECRET';
 const redisHost = 'REDIS_HOST';
 const redisPort = 'REDIS_PORT';
 const redisPassword = 'REDIS_PASSWORD';
+const mongodbPassword = 'MONGODB_PASSWORD';
 
 export const envVariableKeys = {
     env,
@@ -30,4 +31,5 @@ export const envVariableKeys = {
     redisHost,
     redisPort,
     redisPassword,
+    mongodbPassword,
 }

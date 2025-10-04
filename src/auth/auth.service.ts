@@ -10,6 +10,9 @@ import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 import { UserService } from 'src/user/user.service';
 import { PrismaService } from 'src/common/prisma.service';
 import { Role } from '@prisma/client';
+import { InjectModel } from '@nestjs/mongoose';
+import { User } from 'src/user/schema/user.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +27,10 @@ export class AuthService {
         private readonly configService: ConfigService,
         private readonly jwtService: JwtService,
 
-        private readonly prisma: PrismaService,
+        // private readonly prisma: PrismaService,
+
+        @InjectModel(User.name)
+        private readonly userModel: Model<User>,
     ){}
 
     async tokenBlock(token: string){
@@ -119,11 +125,22 @@ export class AuthService {
     }
 
     async authenticate(email: string, password: string) {
-        // Prisma
-        const user = await this.prisma.user.findUnique({
-            where: { email }
-        });
 
+        // MongoDB
+        const user = await this.userModel.findOne(
+            { email },
+            { 
+                password: 1,
+                role: 1,
+            },
+        ).exec();
+
+        // Prisma
+        // const user = await this.prisma.user.findUnique({
+        //     where: { email }
+        // });
+
+        // TypeORM
         // const user = await this.userRepository.findOne({
         //     where: { email }
         // });
@@ -133,21 +150,21 @@ export class AuthService {
         }
 
         // password => 암호화가 진행된 비밀번호 | user.password => 암호화가 안된 비밀번호(암호화 진행 후 비교)
-        const passOk = await bcrypt.compare(password, user.password);
+        // const passOk = await bcrypt.compare(password, user.password);
 
-        if (!passOk) {
-            throw new BadRequestException('잘못된 로그인 정보입니다!');
-        }
+        // if (!passOk) {
+        //     throw new BadRequestException('잘못된 로그인 정보입니다!');
+        // }
 
         return user;
     }
 
-    issueToken(user: {id: number, role: Role}, isRefreshToken: boolean) {
+    issueToken(user: {_id: any, role: Role}, isRefreshToken: boolean) {
         const accessTokenSecret = this.configService.get<string>(envVariableKeys.accessTokenSecret);
         const refreshTokenSecret = this.configService.get<string>(envVariableKeys.refreshTokenSecret);
 
         return this.jwtService.signAsync({
-            sub: user.id,
+            sub: user._id,
             role: user.role,
             type: isRefreshToken ? 'refresh' : 'access',
         }, {

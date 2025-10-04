@@ -34,10 +34,7 @@ import { Role } from '@prisma/client';
 @ApiBearerAuth()
 // Swagger 엔드 포인트를 그룹으로 정리
 @ApiTags('movie')
-@UseInterceptors(
-  ClassSerializerInterceptor,
-  // CacheInterceptor,
-)
+// @UseInterceptors(ClassSerializerInterceptor)
 export class MovieController {
   constructor(private readonly movieService: MovieService) { }
 
@@ -93,7 +90,7 @@ export class MovieController {
   @Get(':id')
   @Public()
   getMovie(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Req() request: any,
   ) {
     // 세션에서 현재 영화 조회 횟수 정보를 가져옴
@@ -216,7 +213,7 @@ export class MovieController {
   @Patch(':id')
   @RBAC(Role.admin)
   patchMovie(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() body: UpdateMovieDto,
   ) {
     return this.movieService.update(
@@ -228,7 +225,7 @@ export class MovieController {
   @Delete(':id')
   @RBAC(Role.admin)
   deleteMovie(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
   ) {
     return this.movieService.remove(id);
   }
@@ -268,17 +265,17 @@ export class MovieController {
   @Post(':id/like')
   createMovieLike(
     // 위 URL의 id 값을 컨트롤러 메서드의 인자로 전달
-    @Param('id', ParseIntPipe) movieId: number,
+    @Param('id') movieId: string,
     // 커스텀 데코레이터
-    @UserId() userId: number,
+    @UserId() userId: string,
   ) {
     return this.movieService.toggleMovieLike(movieId, userId, true);
   }
 
   @Post(':id/dislike')
   createMovieDislike(
-    @Param('id', ParseIntPipe) movieId: number,
-    @UserId() userId: number,
+    @Param('id') movieId: string,
+    @UserId() userId: string,
   ) {
     return this.movieService.toggleMovieLike(movieId, userId, false);
   }

@@ -10,7 +10,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 @ApiBearerAuth()
 // Swagger 엔드 포인트를 그룹으로 정리
 @ApiTags('director')
-@UseInterceptors(ClassSerializerInterceptor)
+// @UseInterceptors(ClassSerializerInterceptor)
 export class DirectorController {
   constructor(private readonly directorService: DirectorService) {}
 
@@ -21,7 +21,7 @@ export class DirectorController {
 
   @Get(':id')
   findOne(
-    @Param('id', ParseIntPipe) id: number)
+    @Param('id') id: string)
   {
     return this.directorService.findOne(id);
   }
@@ -33,7 +33,7 @@ export class DirectorController {
 
   @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() updateDirectorDto: UpdateDirectorDto
   ){
     return this.directorService.update(id, updateDirectorDto);
@@ -41,7 +41,7 @@ export class DirectorController {
 
   @Delete(':id')
   remove(
-    @Param('id', ParseIntPipe) id: number
+    @Param('id') id: string
   ){
     return this.directorService.remove(id);
   }

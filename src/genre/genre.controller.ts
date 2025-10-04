@@ -21,7 +21,7 @@ export class GenreController {
 
   @Get(':id')
   findOne(
-    @Param('id', ParseIntPipe) id: number
+    @Param('id') id: string
   ) {
     return this.genreService.findOne(id);
   }
@@ -33,7 +33,7 @@ export class GenreController {
 
   @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() updateGenreDto: UpdateGenreDto
   ){
     return this.genreService.update(id, updateGenreDto);
@@ -41,7 +41,7 @@ export class GenreController {
 
   @Delete(':id')
   remove(
-    @Param('id', ParseIntPipe) id: number)
+    @Param('id') id: string)
   {
     return this.genreService.remove(id);
   }
